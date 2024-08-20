@@ -118,18 +118,16 @@ def enviar_mensaje(texto, numero ):
         "Content-Type":"application/json",
         "Authorization":"Bearer EAAHXdfa87EQBOy2EQV51w530eFypGoQQq8DlDZAaPrRRzPznmZAhc13eEqwCFDsBdB4vXfN7fAhHCYZBZBas2XMNx71Cne9fd2UbeuR8ildjWquAUOZChODPZAGZBoZBJjkAW29VenEWJHIhiMyyZBZAU4ACMMmrl3YWXaPL1QritSAU1qL9ZCvMZBmhJZAoHSNH4O1qvfWR8wLgK5jQpCBlNslwZD"
     }
-    Connection = http.client.HTTPSConnection("graph.facebook.com")
+    connection = http.client.HTTPSConnection("graph.facebook.com")
     try:
 
-       Connection.request("POST","/v20.0/105171825953083/messages",data,headers)
-       response=Connection.getresponse()
+       connection.request("POST","/v20.0/105171825953083/messages",data,headers)
+       response=connection.getresponse()
        print(response.status,response.reason) 
-    
+
     except Exception as e:
         agregar_log(json.dumps(e))
-
-    finally
-        Connection.close()
-
+    finally:
+        connection.close()
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
