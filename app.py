@@ -35,9 +35,6 @@ def index():
 mensajes_log = []
 
 def agregar_log(texto):
-    mensajes_log.append(texto)
- 
-    #guardar mensaje en DB
     nuevo_registro = Log(texto=texto)
     db.session.add(nuevo_registro)
     db.session.commit()
@@ -65,14 +62,13 @@ def verificar_token(req):
 def recibir_mensajes(req):
     agregar_log(req)
     try:
-        req=request.get_json()
-        entry=req['entry'][0]
-        changes=entry['changes'][0]
-        value=changes['value']
-        objeto_messages=value['messages']
-        agregar_log(json.dumps( objeto_messages))
+        data = request.get_json()
+        entry = data['entry'][0]
+        changes = entry['changes'][0]
+        value = changes['value']
+        objeto_messages = value['messages']
+        agregar_log(json.dumps(objeto_messages))
         return jsonify({'message': 'EVENT_RECEIVED'})
-    
     except Exception as e:
         return jsonify({'message': 'EVENT_RECEIVED'})
 
