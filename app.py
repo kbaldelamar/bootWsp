@@ -38,6 +38,7 @@ def agregar_log(req):
     texto = json.dumps(req)
     nuevo_log = Log(fecha_hora=datetime.utcnow(), texto=texto)
     db.session.add(nuevo_log)
+    
     db.session.commit()
 
 TOKEN_KEVINCODE = "KEVINCODE"
