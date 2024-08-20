@@ -62,10 +62,9 @@ def verificar_token(req):
         return jsonify({'error': 'Token invalido'}), 401
 
 def recibir_mensajes(req):
-    agregar_log(req)
     try:
-        data = request.get_json()
-        entry = data['entry'][0]
+        req = request.get_json()
+        entry = req['entry'][0]
         changes = entry['changes'][0]
         value = changes['value']
         objeto_messages = value['messages']
