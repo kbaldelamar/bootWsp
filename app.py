@@ -88,53 +88,42 @@ def recibir_mensajes(req):
     except Exception as e:
         return jsonify({'message': 'EVENT_RECEIVED'})
     
-def enviar_mensaje(texto, numero ):
-    texto=texto.lower()
-    agregar_log("si llego ")
-    if "hola" in texto:
-        agregar_log("si llego hola ")
-        data={
-                { "messaging_product": "whatsapp", 
-                    "to": numero, 
-                    "type": "text",
-                    "text": 
-                    { 
-                    "preview_url": "false",
-                    "body": "hola soy robot"
-                            } 
-                }
-            }
-    else:
-        agregar_log("si llego no hola")
-        data={
-                { "messaging_product": "whatsapp", 
-                    "to": numero, 
-                    "type": "text",
-                    "text": 
-                    { 
-                    "preview_url": "false",
-                    "body": "hola soy robot nuetro menu es 1.resultados , 2.cotizar , 3.finalizar"
-                            } 
-                }
-            }
-    data=json.dumps(data)
-    headers={
-        "Content-Type":"application/json",
-        "Authorization":"Bearer EAAHXdfa87EQBOy2EQV51w530eFypGoQQq8DlDZAaPrRRzPznmZAhc13eEqwCFDsBdB4vXfN7fAhHCYZBZBas2XMNx71Cne9fd2UbeuR8ildjWquAUOZChODPZAGZBoZBJjkAW29VenEWJHIhiMyyZBZAU4ACMMmrl3YWXaPL1QritSAU1qL9ZCvMZBmhJZAoHSNH4O1qvfWR8wLgK5jQpCBlNslwZD"
-    }
-    connection = http.client.HTTPSConnection("graph.facebook.com")
-    try:
-        agregar_log("si llego try ")
-        connection.request("POST", "/v20.0/105171825953083/messages", data, headers)
-        response = connection.getresponse()
-        print(response.status, response.reason) 
+def enviar_mensaje(texto, numero):
+    texto = texto.lower()
+    agregar_log("Mensaje recibido: " + texto)
 
+    if "hola" in texto:
+        agregar_log("Mensaje contiene 'hola'")
+        mensaje = "hola soy robot"
+    else:
+        agregar_log("Mensaje no contiene 'hola'")
+        mensaje = "hola soy robot nuetro menu es 1.resultados , 2.cotizar , 3.finalizar"
+
+    data = {
+        "messaging_product": "whatsapp",
+        "to": numero,
+        "type": "text",
+        "text": {
+            "preview_url": "false",
+            "body": mensaje
+        }
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer EAAHXdfa87EQBOy2EQV51w530eFypGoQQq8DlDZAaPrRRzPznmZAhc13eEqwCFDsBdB4vXfN7fAhHCYZBZBas2XMNx71Cne9fd2UbeuR8ildjWquAUOZChODPZAGZBoZBJjkAW29VenEWJHIhiMyyZBZAU4ACMMmrl3YWXaPL1QritSAU1qL9ZCvMZBmhJZAoHSNH4O1qvfWR8wLgK5jQpCBlNslwZD"
+    }
+
+    try:
+        agregar_log("Enviando mensaje...")
+        connection = http.client.HTTPSConnection("graph.facebook.com")
+        connection.request("POST", "/v20.0/105171825953083/messages", json.dumps(data), headers)
+        response = connection.getresponse()
+        agregar_log(f"Respuesta HTTP: {response.status} {response.reason}")
     except Exception as e:
-        agregar_log("si llego Exception")
-        agregar_log(json.dumps(e))
-    
+        agregar_log("Error al enviar mensaje:")
+        agregar_log(str(e))
     finally:
-        agregar_log("si llego finally")
         connection.close()
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
