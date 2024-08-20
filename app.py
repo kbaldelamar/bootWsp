@@ -34,12 +34,11 @@ def index():
 
 mensajes_log = []
 
-def agregar_log(texto):
-    if isinstance(texto, dict):
-        texto = json.dumps(texto, ensure_ascii=False)
-    mensajes_log.append(texto)
-    nuevo_registro = Log(texto=texto)
-    db.session.add(nuevo_registro)
+def agregar_log(req):
+    texto = json.dumps(req.json)
+    
+    nuevo_log = Log(fecha_hora=datetime.utcnow(), texto=texto)
+    db.session.add(nuevo_log)
     db.session.commit()
 
 
