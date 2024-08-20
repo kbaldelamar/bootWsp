@@ -120,13 +120,13 @@ def enviar_mensaje(texto, numero ):
     }
     connection = http.client.HTTPSConnection("graph.facebook.com")
     try:
-
-       connection.request("POST","/v20.0/105171825953083/messages",data,headers)
-       response=connection.getresponse()
-       print(response.status,response.reason) 
+        connection.request("POST", "/v20.0/105171825953083/messages", data, headers)
+        response = connection.getresponse()
+        print(response.status, response.reason) 
 
     except Exception as e:
         agregar_log(json.dumps(e))
+    
     finally:
         connection.close()
 if __name__ == '__main__':
