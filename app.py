@@ -92,6 +92,7 @@ def enviar_mensaje(texto, numero ):
     texto=texto.lower()
     agregar_log("si llego ")
     if "hola" in texto:
+        agregar_log("si llego hola ")
         data={
                 { "messaging_product": "whatsapp", 
                     "to": numero, 
@@ -104,6 +105,7 @@ def enviar_mensaje(texto, numero ):
                 }
             }
     else:
+        agregar_log("si llego no hola")
         data={
                 { "messaging_product": "whatsapp", 
                     "to": numero, 
@@ -122,6 +124,7 @@ def enviar_mensaje(texto, numero ):
     }
     connection = http.client.HTTPSConnection("graph.facebook.com")
     try:
+        agregar_log("si llego try ")
         connection.request("POST", "/v20.0/105171825953083/messages", data, headers)
         response = connection.getresponse()
         print(response.status, response.reason) 
