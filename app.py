@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template , request , jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
@@ -22,11 +22,7 @@ class Log(db.Model):
 
 with app.app_context():
     db.create_all()
-    prueba1 =Log(texto='mensaje de prueba 1')
-    prueba2 =Log(texto='mensaje de prueba 2')
-    db.session.add(prueba1)
-    db.session.add(prueba2)
-    db.session.commit()
+
 def ordenarfecha(registros):
     return sorted(registros, key=lambda x: x.fecha_hora, reverse=True)
 
@@ -45,6 +41,29 @@ def agregar_log(texto):
     db.session.commit()
 
 # agregar_log(json.dumps("asdasd"))
+
+
+TOKENKEVINCODE="KEVINCODE"
+@app.route('/webhook',methods=['GET','POST'])
+def webhook():
+    if request.method=='GET':
+        challenge=verificarToken(request)
+        return challenge
+    elif request.method=='POST':
+        response=recibir_mensajes(request)
+        return response
+
+def verificarToken(req):
+    token=req.args.get('hub.verify_token')
+    challenge=req.args.get('hub.challenge')
+    if challenge and token == TOKENKEVINCODE:
+        return challenge
+    else:
+        return jsonify({'error':'token invalido'}),401
+
+def recibir_mensajes(req):
+    return jsonify({'message':'EVENT_RECEIVED'})
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
