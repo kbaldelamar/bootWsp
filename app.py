@@ -35,10 +35,12 @@ def index():
 mensajes_log = []
 
 def agregar_log(texto):
+    mensajes_log.append(texto)
+ 
+    #guardar mensaje en DB
     nuevo_registro = Log(texto=texto)
     db.session.add(nuevo_registro)
     db.session.commit()
-
 TOKEN_KEVINCODE = "KEVINCODE"
 
 @app.route('/webhook', methods=['GET', 'POST'])
