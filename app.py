@@ -130,9 +130,11 @@ def enviar_mensaje(texto, numero ):
         print(response.status, response.reason) 
 
     except Exception as e:
+        agregar_log("si llego Exception")
         agregar_log(json.dumps(e))
     
     finally:
+        agregar_log("si llego finally")
         connection.close()
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
