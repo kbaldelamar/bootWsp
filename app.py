@@ -90,6 +90,7 @@ def recibir_mensajes(req):
     
 def enviar_mensaje(texto, numero ):
     texto=texto.lower()
+    agregar_log("si llego ")
     if "hola" in texto:
         data={
                 { "messaging_product": "whatsapp", 
