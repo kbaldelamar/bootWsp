@@ -34,11 +34,10 @@ def index():
 
 mensajes_log = []
 
-def agregar_log(req):
-    texto = json.dumps(req)
+def agregar_log(data):
+    texto = json.dumps(data)
     nuevo_log = Log(fecha_hora=datetime.utcnow(), texto=texto)
     db.session.add(nuevo_log)
-    
     db.session.commit()
 
 TOKEN_KEVINCODE = "KEVINCODE"
@@ -49,8 +48,9 @@ def webhook():
         challenge = verificar_token(request)
         return challenge
     elif request.method == 'POST':
-        response = recibir_mensajes(request)
-        return response
+        data = request.get_json()
+        agregar_log(data)
+        return jsonify({'message': 'EVENT_RECEIVED'})
 
 def verificar_token(req):
     token = req.args.get('hub.verify_token')
