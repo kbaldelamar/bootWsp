@@ -34,12 +34,10 @@ def index():
 
 mensajes_log = []
 
-def agregar_log(texto):
-    mensajes_log.append(texto)
- 
-    #guardar mensaje en DB
-    nuevo_registro = Log(texto=texto)
-    db.session.add(nuevo_registro)
+def agregar_log(data):
+    texto = json.dumps(data)
+    nuevo_log = Log(fecha_hora=datetime.utcnow(), texto=texto)
+    db.session.add(nuevo_log)
     db.session.commit()
 
 TOKEN_KEVINCODE = "KEVINCODE"
@@ -50,8 +48,9 @@ def webhook():
         challenge = verificar_token(request)
         return challenge
     elif request.method == 'POST':
-        response = recibir_mensajes(request)
-        return response
+        data = request.get_json()
+        agregar_log(data)
+        return jsonify({'message': 'EVENT_RECEIVED'})
 
 def verificar_token(req):
     token = req.args.get('hub.verify_token')
@@ -64,17 +63,7 @@ def verificar_token(req):
 
 def recibir_mensajes(req):
     agregar_log(req)
-    try:
-        req=request.get_json()
-        entry=req['entry'][0]
-        changes=entry['changes'][0]
-        value=changes['value']
-        objeto_messages=value['messages'][0]
-        agregar_log(objeto_messages)
-        return jsonify({'message': 'EVENT_RECEIVED'})
-    
-    except Exception as e:
-        return jsonify({'message': 'EVENT_RECEIVED'})
+    return jsonify({'message': 'EVENT_RECEIVED'})
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+#if __name__ == '__main__':
+#    app.run(host='0.0.0.0', port=80, debug=True)
